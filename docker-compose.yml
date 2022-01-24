@@ -1,0 +1,9 @@
+version: "3.5"
+services:
+  logs:
+    image: vhoen/go-base:latest
+    container_name: vhoen-go-base
+    volumes:
+      - .:/go/src/go-onsite-app
+    ports:
+      - "8000:8000"
