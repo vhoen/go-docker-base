@@ -1,18 +1,21 @@
 # syntax=docker/dockerfile:1
-FROM centos:latest
+FROM alpine:latest
 
 RUN echo "alias ll='ls -alF'" >> ~/.bashrc
 RUN echo "alias la='ls A'" >> ~/.bashrc
 
-RUN yum -qy update && yum clean all
-RUN yum -qy install git wget 
+RUN apk update
+RUN apk add bash
+RUN apk add vim
+RUN apk add --no-cache git make musl-dev go
 
-RUN wget https://golang.org/dl/go1.17.3.linux-amd64.tar.gz
-RUN tar -xzf go1.17.3.linux-amd64.tar.gz
-RUN mv go /usr/local 
-RUN rm go1.17.3.linux-amd64.tar.gz
 
-USER root
+# RUN wget https://golang.org/dl/go1.17.3.linux-amd64.tar.gz
+# RUN tar -xzf go1.17.3.linux-amd64.tar.gz
+# RUN mv go /usr/local 
+# RUN rm go1.17.3.linux-amd64.tar.gz
+
+# USER root
 
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
@@ -20,9 +23,9 @@ ENV GO111MODULE=on \
     GOARCH=amd64 \
     GOPRIVATE=*.pv-cp.net
 
-ENV GOROOT=/usr/local/go 
-ENV GOPATH=/go/src
-ENV PATH=$GOROOT/bin:$GOPATH:$PATH 
+ENV GOROOT /usr/lib/go
+ENV GOPATH /go
+ENV PATH /go/bin:$PATH
 
 # Set the Current Working Directory inside the container
 WORKDIR /go/src/go-onsite-app

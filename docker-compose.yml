@@ -1,6 +1,9 @@
 version: "3.5"
 services:
-  logs:
+  app:
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     image: vhoen/go-base:latest
     container_name: vhoen-go-base
     volumes:
