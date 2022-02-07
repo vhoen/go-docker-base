@@ -1,21 +1,19 @@
 # syntax=docker/dockerfile:1
-FROM alpine:latest
+FROM alpine:3.14.3
 
 RUN echo "alias ll='ls -alF'" >> ~/.bashrc
 RUN echo "alias la='ls A'" >> ~/.bashrc
 
 RUN apk update
-RUN apk add bash
-RUN apk add vim
-RUN apk add --no-cache git make musl-dev go
+RUN apk add --no-cache git bash vim curl make musl-dev go
 
+# RUN apk add --no-cache \
+#         wkhtmltopdf \
+#         xvfb \
+#         ttf-dejavu ttf-droid ttf-freefont ttf-liberation
 
-# RUN wget https://golang.org/dl/go1.17.3.linux-amd64.tar.gz
-# RUN tar -xzf go1.17.3.linux-amd64.tar.gz
-# RUN mv go /usr/local 
-# RUN rm go1.17.3.linux-amd64.tar.gz
-
-# USER root
+# RUN ln -s /usr/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf;
+# RUN chmod +x /usr/local/bin/wkhtmltopdf;
 
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \

@@ -4,7 +4,7 @@ services:
     # build:
     #   context: .
     #   dockerfile: Dockerfile
-    image: vhoen/go-base:latest
+    image: vhoen/go-base:1.2
     container_name: vhoen-go-base
     volumes:
       - .:/go/src/go-onsite-app
