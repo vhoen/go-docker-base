@@ -14,8 +14,10 @@ RUN apk add --no-cache git bash vim curl make musl-dev go tzdata
 
 # RUN ln -s /usr/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf;
 # RUN chmod +x /usr/local/bin/wkhtmltopdf;
-
 ENV TZ Europe/Paris
+RUN apk add --no-cache alpine-conf &&\
+    setup-timezone -z $TZ
+    
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
     GOOS=linux \
