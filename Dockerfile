@@ -5,7 +5,7 @@ RUN echo "alias ll='ls -alF'" >> ~/.bashrc
 RUN echo "alias la='ls A'" >> ~/.bashrc
 
 RUN apk update
-RUN apk add --no-cache git bash vim curl make musl-dev go
+RUN apk add --no-cache git bash vim curl make musl-dev go tzdata
 
 # RUN apk add --no-cache \
 #         wkhtmltopdf \
@@ -15,6 +15,7 @@ RUN apk add --no-cache git bash vim curl make musl-dev go
 # RUN ln -s /usr/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf;
 # RUN chmod +x /usr/local/bin/wkhtmltopdf;
 
+ENV TZ Europe/Paris
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
     GOOS=linux \
