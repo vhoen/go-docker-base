@@ -29,6 +29,9 @@ ENV GOROOT /usr/lib/go
 ENV GOPATH /go
 ENV PATH /go/bin:$PATH
 
+# Installs godoc
+RUN go install -v golang.org/x/tools/cmd/godoc@latest
+
 # Set the Current Working Directory inside the container
 WORKDIR /go/src/go-onsite-app
 
@@ -42,5 +45,5 @@ COPY . .
 # Export necessary port
 EXPOSE 8000
 
-# # Command to run when starting the container
-CMD ["go", "run", "main.go", "-config", "/go/src/go-onsite-app/parameters/parameters.json", "-debug=Debug"]
+# Command to run when starting the containerst
+CMD ["/bin/bash", "./cmd.sh"]
