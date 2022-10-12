@@ -31,6 +31,7 @@ ENV PATH /go/bin:$PATH
 
 # Installs godoc
 RUN go install -v golang.org/x/tools/cmd/godoc@latest
+RUN go install github.com/go-delve/delve/cmd/dlv@latest
 
 # Set the Current Working Directory inside the container
 WORKDIR /go/src/go-onsite-app
