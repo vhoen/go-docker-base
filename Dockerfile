@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
-FROM alpine:3.14.3
+# https://www.reddit.com/r/docker/comments/i0wu32/how_can_i_debug_golang_running_in_docker_with/
+FROM alpine:3.17
 
 RUN echo "alias ll='ls -alF'" >> ~/.bashrc
 RUN echo "alias la='ls A'" >> ~/.bashrc
