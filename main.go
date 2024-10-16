@@ -20,8 +20,11 @@ func main() {
 	router.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		resp, _ := json.Marshal("Hello World")
-		w.Write(resp)
+
+		text := "Hello-World"
+
+		resp, _ := json.Marshal(text)
+		_, _ = w.Write(resp)
 	})
 
 	server := &http.Server{
@@ -49,7 +52,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), Timeout)
 	defer cancel()
 
-	server.Shutdown(ctx)
+	_ = server.Shutdown(ctx)
 
 	logrus.Info("Http Service shutdown")
 

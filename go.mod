@@ -1,6 +1,6 @@
-module go-base/1
+module go-base/v2
 
-go 1.17
+go 1.23.2
 
 require (
 	github.com/gorilla/mux v1.8.0

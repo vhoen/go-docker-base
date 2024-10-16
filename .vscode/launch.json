@@ -1,0 +1,25 @@
+{
+  // Utilisez IntelliSense pour en savoir plus sur les attributs possibles.
+  // Pointez pour afficher la description des attributs existants.
+  // Pour plus d'informations, visitez : https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Delve into Docker",
+      "type": "go",
+      "request": "attach",
+      "mode": "remote",
+      "substitutePath": [
+        {
+          "from": "${workspaceFolder}/",
+          "to": "/go/src/go-onsite-app/",
+        },
+      ],
+      "port": 2345,
+      "host": "127.0.0.1",
+      "showLog": true,
+      "apiVersion": 2,
+      "trace": "verbose"
+    }
+  ]
+}

@@ -1,51 +1,33 @@
-# syntax=docker/dockerfile:1
-# https://www.reddit.com/r/docker/comments/i0wu32/how_can_i_debug_golang_running_in_docker_with/
-FROM alpine:3.17
-
-RUN echo "alias ll='ls -alF'" >> ~/.bashrc
-RUN echo "alias la='ls A'" >> ~/.bashrc
-
-RUN apk update
-RUN apk add --no-cache git bash vim curl make musl-dev go tzdata
-
-# RUN apk add --no-cache \
-#         wkhtmltopdf \
-#         xvfb \
-#         ttf-dejavu ttf-droid ttf-freefont ttf-liberation
-
-# RUN ln -s /usr/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf;
-# RUN chmod +x /usr/local/bin/wkhtmltopdf;
-
-ENV TZ Europe/Paris
-RUN apk add --no-cache alpine-conf &&\
-    setup-timezone -z $TZ
-    
-ENV GO111MODULE=on \
-    CGO_ENABLED=0 \
-    GOOS=linux \
-    GOARCH=amd64 \
-    GOPRIVATE=*.pv-cp.net
-
-ENV GOROOT /usr/lib/go
-ENV GOPATH /go
-ENV PATH /go/bin:$PATH
-
-# Installs godoc
-RUN go install -v golang.org/x/tools/cmd/godoc@latest
-RUN go install github.com/go-delve/delve/cmd/dlv@latest
-
-# Set the Current Working Directory inside the container
+FROM golang:1.23-alpine AS base
 WORKDIR /go/src/go-onsite-app
 
-# Copy go mod and sum files
-COPY go.mod go.sum ./
+ENV GO111MODULE="on"
+ENV GOOS="linux"
+ENV CGO_ENABLED=0
 
-# Copy the code into the container
-COPY . .
+# System dependencies
+RUN apk update \
+    && apk add --no-cache \
+    ca-certificates \
+    git \
+    && update-ca-certificates
 
+# Hot reloading mod
 
-# Export necessary port
+RUN go install github.com/air-verse/air@latest
+RUN go install github.com/go-delve/delve/cmd/dlv@latest
 EXPOSE 8000
+EXPOSE 2345
 
-# Command to run when starting the containerst
-CMD ["/bin/bash", "./cmd.sh"]
+ENTRYPOINT ["air"]
+
+### Executable builder
+FROM base AS builder
+WORKDIR /go/src/go-onsite-app
+
+# Application dependencies
+COPY . /go/src/go-onsite-app
+RUN go mod download \
+    && go mod verify
+
+RUN go build -o my-app -a .
