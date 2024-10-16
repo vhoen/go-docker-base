@@ -1,12 +1,25 @@
-version: "3.5"
+version: "3.8"
 services:
   app:
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
-    image: vhoen/go-base:1.2
+    # image: vhoen/go-base:2.0.pre.2
     container_name: vhoen-go-base
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # target: dev
     volumes:
-      - .:/go/src/go-onsite-app
+    - .:/go/src/go-onsite-app:rw,delegated
+    networks:
+    - onsite
     ports:
-      - "8000:8000"
+    - 8000:8000
+    - 2345:2345
+
+networks:
+  onsite:
+    name: onsite
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.10.0/24"
+          gateway: "192.168.10.1"
