@@ -11,23 +11,14 @@ RUN apk update \
     ca-certificates \
     git \
     && update-ca-certificates
-
-# Hot reloading mod
-
-RUN go install github.com/air-verse/air@latest
+    
 RUN go install github.com/go-delve/delve/cmd/dlv@latest
 EXPOSE 8000
 EXPOSE 2345
 
-ENTRYPOINT ["air"]
-
-### Executable builder
-FROM base AS builder
-WORKDIR /go/src/go-onsite-app
-
-# Application dependencies
 COPY . /go/src/go-onsite-app
 RUN go mod download \
     && go mod verify
 
-RUN go build -o my-app -a .
+
+ENTRYPOINT ["./cmd.sh"]
