@@ -1,6 +1,5 @@
 FROM golang:1.25.3-alpine AS base
 WORKDIR /go/src/go-onsite-app
-
 ENV GO111MODULE="on"
 ENV GOOS="linux"
 ENV CGO_ENABLED=0
@@ -12,22 +11,39 @@ RUN apk update \
     git \
     && update-ca-certificates
 
-# Hot reloading mod
-
+# Hot reloading and debugging tools
 RUN go install github.com/air-verse/air@latest
 RUN go install github.com/go-delve/delve/cmd/dlv@latest
+
 EXPOSE 8000
 EXPOSE 2345
 
-ENTRYPOINT ["air"]
+### Development stage with Air and Delve
+FROM base AS dev
+WORKDIR /go/src/go-onsite-app
 
-### Executable builder
+# Copy source code
+COPY . /go/src/go-onsite-app
+
+# Download dependencies
+RUN go mod download && go mod verify
+
+# Copy Air config
+COPY .air.toml .air.toml
+
+CMD ["air"]
+
+### Production builder
 FROM base AS builder
 WORKDIR /go/src/go-onsite-app
 
-# Application dependencies
 COPY . /go/src/go-onsite-app
-RUN go mod download \
-    && go mod verify
+RUN go mod download && go mod verify
+RUN go build -o go-onsite-app -a .
 
-ENTRYPOINT ["./cmd.sh"]
+FROM alpine:latest AS production
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=builder /go/src/go-onsite-app/go-onsite-app .
+EXPOSE 8000
+CMD ["./go-onsite-app"]

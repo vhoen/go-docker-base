@@ -23,6 +23,8 @@ start: build
 restart: stop start
 
 reload: stop
+	docker-compose down --remove-orphans
+	docker network prune -f
 	@$(DOCKER_COMPOSE) up --no-recreate -d app
 
 stop:
