@@ -30,4 +30,4 @@ COPY . /go/src/go-onsite-app
 RUN go mod download \
     && go mod verify
 
-RUN go build -o my-app -a .
+ENTRYPOINT ["./cmd.sh"]
