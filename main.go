@@ -21,14 +21,14 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 
-		text := "Hello-World"
+		text := "Hello-World aa"
 
 		resp, _ := json.Marshal(text)
 		_, _ = w.Write(resp)
 	})
 
 	server := &http.Server{
-		Addr:         "0.0.0.0:8000",
+		Addr:         "0.0.0.0:8001",
 		WriteTimeout: Timeout,
 		ReadTimeout:  Timeout,
 		IdleTimeout:  Timeout,

@@ -1,33 +1,33 @@
-FROM golang:1.25.3-alpine AS base
-WORKDIR /go/src/go-onsite-app
+# ---------- Base dev image ----------
+FROM golang:1.25.3-alpine
 
-ENV GO111MODULE="on"
-ENV GOOS="linux"
-ENV CGO_ENABLED=0
+WORKDIR /app
+
+ENV GO111MODULE=on \
+    GOOS=linux \
+    CGO_ENABLED=0 \
+    PATH=$PATH:/go/bin
 
 # System dependencies
-RUN apk update \
-    && apk add --no-cache \
+RUN apk update && apk add --no-cache \
     ca-certificates \
     git \
+    bash \
+    libc6-compat \
     && update-ca-certificates
 
-# Hot reloading mod
-
+# Install Air (hot reload) and Delve (debugger)
 RUN go install github.com/air-verse/air@latest
 RUN go install github.com/go-delve/delve/cmd/dlv@latest
-EXPOSE 8000
-EXPOSE 2345
 
-ENTRYPOINT ["air"]
+# Expose default ports: web + debugger
+EXPOSE 8000 2345
 
-### Executable builder
-FROM base AS builder
-WORKDIR /go/src/go-onsite-app
+# Copy project (will be mounted in docker-compose, so optional)
+COPY . /app
 
-# Application dependencies
-COPY . /go/src/go-onsite-app
-RUN go mod download \
-    && go mod verify
+# Entrypoint: wrapper script that runs Air + Delve
+COPY start-dev.sh /app/start-dev.sh
+RUN chmod +x /app/start-dev.sh
 
-RUN go build -o my-app -a .
+CMD ["/app/start-dev.sh"]
