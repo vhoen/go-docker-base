@@ -4,7 +4,7 @@ set -e
 
 #####<AIR>#####
 # Air watches code and rebuilds binary, but skip running it
-# air -c .air.toml &
+air -c .air.toml 
 #####</AIR>#####
 
 # #####<DELVE>#####

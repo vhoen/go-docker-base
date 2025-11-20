@@ -18,6 +18,7 @@ services:
       - SYS_PTRACE
     environment:
       - CGO_ENABLED=0
+      - TZ=Europe/Paris
 
 volumes:
   go-modules:
